@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>สุขสันต์วันเกิดนะอุ้ม 💖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stars"></div>
+
+<!-- ฉาก 1: เค้ก -->
+<section class="scene active" id="sceneCake">
+  <h1 class="title">สุขสันต์วันเกิดนะอุ้ม 💖</h1>
+  <div class="stage" id="cakeStage">
+    <div class="tilt">
+      <div class="spin" id="cake"></div>
+      <div class="flame-wrap" id="flameWrap">
+        <div class="flame" id="flame"></div>
+        <div class="smoke"><i></i><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </div>
+  <p class="hint" id="hint">แตะที่เทียนหรือกดปุ่มด้านล่างได้เลย</p>
+  <button class="btn" id="blowBtn">💨 เป่าเทียนเลย!</button>
+</section>
+
+<!-- ฉาก 2: ซองจดหมาย -->
+<section class="scene" id="sceneEnv">
+  <div class="envelope" id="envelope">
+    <div class="env-back"></div>
+    <div class="env-flap"></div>
+    <div class="env-front"></div>
+    <button class="seal" id="seal" aria-label="เปิดซอง">❤</button>
+    <p class="env-text">สำหรับอุ้มคนเก่ง 🌸</p>
+  </div>
+  <p class="hint">กดที่หัวใจเพื่อเปิดซอง</p>
+</section>
+
+<!-- ฉาก 3: จดหมาย (แก้ข้อความได้ตรงนี้) -->
+<section class="scene" id="sceneLetter">
+  <div class="paper" id="paper">
+    <div class="letter-text">
+      สุขสันต์วันเกิดนะแฟนนกัสขอให้แฟนมีความสุขเยอะๆๆเจอเรื่องดีๆกัสสจะบอกว่าากัสรักอุ้มมากกกกๆๆๆเลยนะะะ<br><br>
+      ปีนี้ปีแรกที่กัสได้แฮปๆวันเกิดอุ้มมละ<br><br>
+      กัสก็อยากอยู่ในวันเกิดอุ้มในทุกๆปีเลยยย<br><br>
+      กัสรักอุ้มนะะ
+    </div>
+
+    <!-- เสียงของกัส: วางไฟล์ voice.mp3 ไว้โฟลเดอร์เดียวกับ index.html -->
+    <div class="audio-box" id="audioBox">
+      <span>🎧 เสียงจากกัส</span>
+      <audio id="voice" controls preload="metadata" src="voice.mp3"></audio>
+    </div>
+
+    <div class="actions">
+      <button class="btn small" id="shareBtn">🔗 ส่งต่อ / คัดลอกลิงก์</button>
+      <button class="btn small ghost" id="replayBtn">🎂 ดูอีกครั้ง</button>
+    </div>
+    <div class="toast" id="toast">คัดลอกลิงก์แล้ว ✔</div>
+  </div>
+</section>
+
+<script src="app.js"></script>
+<script>
+  // ถ้าไม่มีไฟล์เสียง ให้แสดงข้อความแทนเครื่องเล่น
+  document.getElementById('voice').addEventListener('error', function () {
+    var b = document.getElementById('audioBox');
+    b.classList.add('muted');
+    b.innerHTML = 'วางไฟล์เสียงชื่อ <b>voice.mp3</b> ไว้โฟลเดอร์เดียวกับ index.html เพื่อให้เครื่องเล่นเสียงปรากฏ';
+  });
+</script>
+</body>
+</html>
