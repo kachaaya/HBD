@@ -2,11 +2,106 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>สุขสันต์วันเกิดนะอุ้ม 💖</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:'Mali','Sarabun','Tahoma',sans-serif;color:#fff;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 20%,#3b1d6e 0%,#1d0f3d 55%,#0c0620 100%);
+}
+#stars{position:fixed;inset:0;pointer-events:none}
+#stars i{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;animation:tw 3s infinite ease-in-out}
+@keyframes tw{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.3)}}
+
+.scene{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  opacity:0;visibility:hidden;transition:opacity .8s,visibility .8s;padding:20px}
+.scene.active{opacity:1;visibility:visible}
+.title{font-size:clamp(22px,5.4vw,38px);text-align:center;text-shadow:0 0 18px #ff9ad5}
+.hint{font-size:14px;opacity:.78;text-align:center;min-height:20px;max-width:340px}
+
+.btn{border:0;border-radius:40px;padding:14px 34px;font:600 18px 'Mali','Tahoma',sans-serif;color:#fff;cursor:pointer;
+  background:linear-gradient(135deg,#ff7eb6,#ff4f9a);box-shadow:0 8px 24px rgba(255,79,154,.45);transition:transform .2s}
+.btn:hover{transform:translateY(-2px) scale(1.04)}
+.btn:active{transform:scale(.97)}
+.btn.small{font-size:15px;padding:10px 22px}
+.btn.ghost{background:transparent;border:2px solid #ff7eb6;color:#d2457f;box-shadow:none}
+.btn[disabled]{opacity:.4;pointer-events:none}
+
+/* ================= เค้ก 3D ================= */
+.stage{position:relative;width:min(100vw,460px);height:440px;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.stage:active{cursor:grabbing}
+.stage-in{position:absolute;left:50%;top:50%;width:0;height:0;perspective:1100px;transform:scale(var(--k,1))}
+.glow{position:absolute;left:-210px;top:-330px;width:420px;height:420px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,196,120,.38) 0,rgba(255,150,170,.14) 40%,transparent 68%);
+  transition:opacity 1.8s ease}
+.glow.off{opacity:0}
+.tilt{position:absolute;left:0;top:0;margin-top:34px;width:0;height:0;transform-style:preserve-3d}
+.spin{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d}
+.floor{position:absolute;left:-210px;top:-116px;width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,0,0,.6) 0,rgba(0,0,0,.35) 38%,transparent 70%);transform:rotateX(90deg)}
+.cyl{position:absolute;left:0;transform-style:preserve-3d}
+.cyl .side{position:absolute;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.cyl .shade{position:absolute;inset:0;background:#26093a;opacity:0;pointer-events:none}
+.cyl .top{position:absolute;border-radius:50%}
+.pearl,.cherry{position:absolute;border-radius:50%;pointer-events:none}
+.pearl{background:radial-gradient(circle at 35% 30%,#fff 0 12%,#ffd3e5 42%,#ff93c0 100%);box-shadow:0 1px 3px rgba(110,20,70,.45)}
+.pearl.w{background:radial-gradient(circle at 35% 30%,#fff 0 14%,#fff4e8 45%,#efd0b4 100%)}
+.cherry{background:radial-gradient(circle at 34% 30%,#ffb3bd 0 9%,#e8153f 32%,#8c0a22 100%);box-shadow:0 3px 5px rgba(80,0,20,.5)}
+.cherry::before{content:'';position:absolute;left:50%;top:-15px;width:2px;height:17px;background:#3f8a39;transform:rotate(18deg);transform-origin:bottom center}
+.flame-wrap{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none}
+.wick{position:absolute;left:-1px;top:-8px;width:2px;height:9px;background:#2a1a1a;border-radius:1px}
+.flame{position:absolute;left:-10px;top:-40px;width:20px;height:40px;transform-origin:50% 100%;
+  border-radius:50% 50% 50% 50%/65% 65% 35% 35%;
+  background:radial-gradient(ellipse at 50% 75%,#fff7b0 0,#ffd23f 40%,#ff8c1a 80%,rgba(255,80,0,0) 100%);
+  box-shadow:0 0 22px 8px rgba(255,190,70,.55),0 0 60px 20px rgba(255,150,40,.25);
+  animation:flick .35s infinite alternate ease-in-out;
+  transition:opacity 1.6s ease,transform 1.6s ease,box-shadow 1.6s}
+@keyframes flick{0%{transform:scale(1,1) rotate(-3deg)}50%{transform:scale(.94,1.08) rotate(2deg)}100%{transform:scale(1.04,.96) rotate(-1deg)}}
+.flame.out{animation:none;opacity:0;transform:scale(.2,.4);box-shadow:0 0 0 0 transparent}
+.smoke i{position:absolute;left:-5px;top:-10px;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.55);filter:blur(5px);opacity:0}
+.smoke.go i{animation:smoke 2.6s ease-out forwards}
+.smoke.go i:nth-child(2){animation-delay:.3s;left:0}
+.smoke.go i:nth-child(3){animation-delay:.6s;left:-9px}
+.smoke.go i:nth-child(4){animation-delay:.9s;left:3px}
+@keyframes smoke{0%{opacity:0;transform:translate(0,0) scale(.5)}20%{opacity:.7}100%{opacity:0;transform:translate(14px,-95px) scale(3)}}
+
+/* ================= ซองจดหมาย ================= */
+.env-wrap{animation:sway 5s ease-in-out infinite alternate}
+@keyframes sway{from{transform:perspective(900px) rotateY(-9deg) rotateX(5deg)}to{transform:perspective(900px) rotateY(9deg) rotateX(-3deg)}}
+.envelope{position:relative;width:min(340px,86vw);height:230px;perspective:900px;filter:drop-shadow(0 18px 30px rgba(0,0,0,.5))}
+.env-back,.env-front{position:absolute;inset:0;border-radius:10px;background:#fff}
+.env-back{background:#f1ecf6}
+.env-front{background:#fff;clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%);box-shadow:inset 0 0 0 1px #eee}
+.env-flap{position:absolute;left:0;top:0;width:100%;height:60%;background:#fafafa;
+  clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .9s ease,z-index 0s .45s;z-index:3}
+.envelope.open .env-flap{transform:rotateX(180deg);z-index:0}
+.seal{position:absolute;left:50%;top:50%;width:62px;height:62px;margin:-52px 0 0 -31px;border:0;border-radius:50%;z-index:4;
+  background:radial-gradient(circle at 35% 30%,#ff6b6b,#c91f37);color:#fff;font-size:30px;cursor:pointer;
+  box-shadow:0 5px 12px rgba(150,0,30,.5);animation:beat 1.2s infinite;transition:opacity .4s}
+.envelope.open .seal{opacity:0;pointer-events:none}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.env-text{position:absolute;left:0;right:0;bottom:22px;text-align:center;color:#a2486f;font-size:16px;z-index:4}
+
+/* ================= จดหมาย ================= */
+.paper{position:relative;width:min(480px,94vw);max-height:92vh;overflow:auto;padding:30px 26px 24px;color:#5a3a45;
+  background:#fff8e8;border-radius:6px;box-shadow:0 20px 50px rgba(0,0,0,.5);
+  background-image:repeating-linear-gradient(transparent 0 31px,rgba(200,160,130,.25) 31px 32px);
+  transform:translateY(60px) scale(.85);opacity:0}
+#sceneLetter.active .paper{animation:pop .9s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes pop{to{transform:none;opacity:1}}
+.letter-text p{font-size:17px;line-height:32px;margin-bottom:32px}
+.letter-text p:last-child{margin-bottom:0}
+.actions{margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.toast{position:absolute;left:50%;bottom:-8px;transform:translate(-50%,10px);background:#333;color:#fff;padding:6px 14px;border-radius:20px;font-size:13px;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,-6px)}
+
+.heart{position:fixed;bottom:-30px;font-size:22px;pointer-events:none;animation:rise 5s linear forwards;z-index:9}
+@keyframes rise{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+</style>
 </head>
 <body>
 <div id="stars"></div>
@@ -15,26 +110,33 @@
 <section class="scene active" id="sceneCake">
   <h1 class="title">สุขสันต์วันเกิดนะอุ้ม 💖</h1>
   <div class="stage" id="cakeStage">
-    <div class="tilt">
-      <div class="spin" id="cake"></div>
+    <div class="stage-in" id="stageIn">
+      <div class="glow" id="glow"></div>
+      <div class="tilt" id="tilt">
+        <div class="floor"></div>
+        <div class="spin" id="spin"></div>
+      </div>
       <div class="flame-wrap" id="flameWrap">
+        <div class="wick"></div>
         <div class="flame" id="flame"></div>
         <div class="smoke"><i></i><i></i><i></i><i></i></div>
       </div>
     </div>
   </div>
-  <p class="hint" id="hint">แตะที่เทียนหรือกดปุ่มด้านล่างได้เลย</p>
+  <p class="hint" id="hint">แตะที่เทียนหรือกดปุ่มด้านล่างได้เลย (ลากนิ้วเพื่อหมุนเค้กได้นะ)</p>
   <button class="btn" id="blowBtn">💨 เป่าเทียนเลย!</button>
 </section>
 
 <!-- ฉาก 2: ซองจดหมาย -->
 <section class="scene" id="sceneEnv">
-  <div class="envelope" id="envelope">
-    <div class="env-back"></div>
-    <div class="env-flap"></div>
-    <div class="env-front"></div>
-    <button class="seal" id="seal" aria-label="เปิดซอง">❤</button>
-    <p class="env-text">สำหรับอุ้มคนเก่ง 🌸</p>
+  <div class="env-wrap">
+    <div class="envelope" id="envelope">
+      <div class="env-back"></div>
+      <div class="env-flap"></div>
+      <div class="env-front"></div>
+      <button class="seal" id="seal" aria-label="เปิดซอง">❤</button>
+      <p class="env-text">สำหรับอุ้มคนเก่ง 🌸</p>
+    </div>
   </div>
   <p class="hint">กดที่หัวใจเพื่อเปิดซอง</p>
 </section>
@@ -43,18 +145,11 @@
 <section class="scene" id="sceneLetter">
   <div class="paper" id="paper">
     <div class="letter-text">
-      สุขสันต์วันเกิดนะแฟนนกัสขอให้แฟนมีความสุขเยอะๆๆเจอเรื่องดีๆกัสสจะบอกว่าากัสรักอุ้มมากกกกๆๆๆเลยนะะะ<br><br>
-      ปีนี้ปีแรกที่กัสได้แฮปๆวันเกิดอุ้มมละ<br><br>
-      กัสก็อยากอยู่ในวันเกิดอุ้มในทุกๆปีเลยยย<br><br>
-      กัสรักอุ้มนะะ
+      <p>สุขสันต์วันเกิดนะแฟนนกัสขอให้แฟนมีความสุขเยอะๆๆเจอเรื่องดีๆกัสสจะบอกว่าากัสรักอุ้มมากกกกๆๆๆเลยนะะะ</p>
+      <p>ปีนี้ปีแรกที่กัสได้แฮปๆวันเกิดอุ้มมละ</p>
+      <p>กัสก็อยากอยู่ในวันเกิดอุ้มในทุกๆปีเลยยย</p>
+      <p>กัสรักอุ้มนะะ</p>
     </div>
-
-    <!-- เสียงของกัส: วางไฟล์ voice.mp3 ไว้โฟลเดอร์เดียวกับ index.html -->
-    <div class="audio-box" id="audioBox">
-      <span>🎧 เสียงจากกัส</span>
-      <audio id="voice" controls preload="metadata" src="voice.mp3"></audio>
-    </div>
-
     <div class="actions">
       <button class="btn small" id="shareBtn">🔗 ส่งต่อ / คัดลอกลิงก์</button>
       <button class="btn small ghost" id="replayBtn">🎂 ดูอีกครั้ง</button>
@@ -63,14 +158,236 @@
   </div>
 </section>
 
-<script src="app.js"></script>
 <script>
-  // ถ้าไม่มีไฟล์เสียง ให้แสดงข้อความแทนเครื่องเล่น
-  document.getElementById('voice').addEventListener('error', function () {
-    var b = document.getElementById('audioBox');
-    b.classList.add('muted');
-    b.innerHTML = 'วางไฟล์เสียงชื่อ <b>voice.mp3</b> ไว้โฟลเดอร์เดียวกับ index.html เพื่อให้เครื่องเล่นเสียงปรากฏ';
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var rnd = function (a, b) { return a + Math.random() * (b - a); };
+
+  /* ---------- ดาว ---------- */
+  for (var i = 0; i < 90; i++) {
+    var s = document.createElement('i');
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = Math.random() * 3 + 's';
+    s.style.transform = 'scale(' + (0.5 + Math.random()) + ')';
+    $('stars').appendChild(s);
+  }
+
+  /* ---------- ฉาก 3D ---------- */
+  var spinEl = $('spin'), tiltEl = $('tilt'), flameWrap = $('flameWrap');
+  var BASE = 22, spin = 0, vel = BASE, tiltDeg = 24, dragging = false;
+  var faces = [], pearls = [];
+
+  // ทรงกระบอกประกอบจากแผ่นแนวตั้ง + ฝาด้านบน มีแสงเงาคำนวณทุกเฟรม
+  function cyl(o) {
+    var n = o.n || 44, g = document.createElement('div');
+    g.className = 'cyl'; g.style.top = o.top + 'px'; g.style.height = o.h + 'px';
+    var w = (2 * Math.PI * o.r) / n * 1.05 + 1;
+    for (var i = 0; i < n; i++) {
+      var a = i * 360 / n, f = document.createElement('div');
+      f.className = 'side';
+      f.style.width = w + 'px'; f.style.height = o.h + 'px'; f.style.left = (-w / 2) + 'px';
+      f.style.background = o.side(i);
+      f.style.transform = 'rotateY(' + a + 'deg) translateZ(' + o.r + 'px)';
+      var sh = document.createElement('div'); sh.className = 'shade'; f.appendChild(sh);
+      g.appendChild(f);
+      faces.push({ el: sh, a: a, k: o.shadeK || 0.55 });
+    }
+    var t = document.createElement('div');
+    t.className = 'top';
+    t.style.width = t.style.height = (o.r * 2) + 'px';
+    t.style.left = (-o.r) + 'px';
+    t.style.top = (o.h / 2 - o.r) + 'px';
+    t.style.background = o.topBg;
+    t.style.transform = 'rotateX(90deg) translateZ(' + (o.h / 2) + 'px)';
+    g.appendChild(t);
+    spinEl.appendChild(g);
+  }
+
+  // วงกลมลูกปัด/เชอร์รี่ที่หันเข้าหากล้องเสมอ (เหมือนลูกกลม)
+  function ring(n, r, y, size, cls, off) {
+    for (var i = 0; i < n; i++) {
+      var e = document.createElement('div');
+      e.className = cls;
+      e.style.width = e.style.height = size + 'px';
+      e.style.left = (-size / 2) + 'px';
+      e.style.top = (y - size / 2) + 'px';
+      spinEl.appendChild(e);
+      pearls.push({ e: e, a: i * 360 / n + (off || 0), r: r });
+    }
+  }
+
+  function sprinkles(cnt, y0, y1) {
+    var cols = ['#ff4f9a', '#ffc83d', '#4fb8ff', '#7ee08a', '#b58cff'], out = '';
+    for (var i = 0; i < cnt; i++)
+      out += 'radial-gradient(circle at ' + rnd(15, 85).toFixed(0) + '% ' + rnd(y0, y1).toFixed(0) + '%,' +
+             cols[i % cols.length] + ' 1.6px,transparent 2.4px),';
+    return out;
+  }
+
+  // จานรอง
+  cyl({ n: 56, r: 152, h: 9, top: 84, shadeK: .5,
+    side: function () { return 'linear-gradient(#fdfbff,#c9c2dc)'; },
+    topBg: 'radial-gradient(circle,#fff 0,#f6f2fb 62%,#d9d1ea 88%,#bfb5d8 100%)' });
+
+  // ชั้นล่าง
+  cyl({ r: 118, h: 88, top: -4, n: 52,
+    side: function (i) {
+      var d = 10 + ((i * 7) % 4) * 5;
+      return sprinkles(0, 0, 0) +
+        'radial-gradient(farthest-side at 50% 0,#ff9fc8 98%,transparent 100%) 0 26px/100% ' + d + 'px no-repeat,' +
+        'linear-gradient(#ffb3d2,#ff9cc5) 0 0/100% 26px no-repeat,' +
+        'linear-gradient(#ffc6dc,#ffb0d0) 0 100%/100% 12px no-repeat,' +
+        'linear-gradient(#fff7ea,#ffe9d2)';
+    },
+    topBg: 'radial-gradient(circle,#fff1f7 0,#ffd0e3 70%,#ffb0d0 100%)' });
+
+  // ชั้นบน
+  cyl({ r: 80, h: 76, top: -80, n: 40,
+    side: function (i) {
+      var d = 9 + ((i * 5) % 4) * 5;
+      return sprinkles(4, 66, 92) +
+        'radial-gradient(farthest-side at 50% 0,#ff8fbe 98%,transparent 100%) 0 24px/100% ' + d + 'px no-repeat,' +
+        'linear-gradient(#ffa6cb,#ff90bf) 0 0/100% 24px no-repeat,' +
+        'linear-gradient(#fffaf0,#ffeedb)';
+    },
+    topBg: sprinkles(14, 15, 85) + 'radial-gradient(circle,#fff6fa 0,#ffd3e5 72%,#ffb6d3 100%)' });
+
+  // เทียน
+  cyl({ r: 5.5, h: 54, top: -134, n: 16, shadeK: .45,
+    side: function () { return 'repeating-linear-gradient(45deg,#fff 0 6px,#8fd3ff 6px 12px)'; },
+    topBg: '#fff' });
+
+  // ลูกปัดครีมรอบขอบเค้ก
+  ring(30, 121, 80, 15, 'pearl w');          // ฐานชั้นล่าง
+  ring(28, 113, -6, 14, 'pearl', 3);         // ขอบบนชั้นล่าง
+  ring(22, 83, -10, 11, 'pearl w', 5);       // ฐานชั้นบน
+  ring(22, 76, -82, 12, 'pearl', 2);         // ขอบบนชั้นบน
+  ring(5, 46, -90, 24, 'cherry', 12);        // เชอร์รี่ด้านบน
+
+  /* ---------- ลูป: หมุน + แสงเงา ---------- */
+  var LIGHT = -32 * Math.PI / 180;
+  var last = performance.now();
+  function frame(now) {
+    var dt = Math.min(.05, (now - last) / 1000); last = now;
+    if (!dragging) {
+      vel += (BASE - vel) * Math.min(1, dt * 2.2);
+      spin += vel * dt;
+    }
+    tiltEl.style.transform = 'rotateX(' + (-tiltDeg) + 'deg)';
+    spinEl.style.transform = 'rotateY(' + spin + 'deg)';
+    var tr = tiltDeg * Math.PI / 180, cy = -134 + 34;     // ปลายเทียน (พิกัดในฉาก)
+    var zc = -cy * Math.sin(tr), sc = 1100 / (1100 - zc);  // perspective 1100px
+    flameWrap.style.transform = 'translateY(' + (cy * Math.cos(tr) * sc).toFixed(2) + 'px) scale(' + sc.toFixed(4) + ')';
+    var j, p, f, lit;
+    for (j = 0; j < faces.length; j++) {
+      f = faces[j];
+      lit = Math.max(0, Math.cos((f.a + spin) * Math.PI / 180 - LIGHT));
+      f.el.style.opacity = (f.k * (1 - lit)).toFixed(3);
+    }
+    for (j = 0; j < pearls.length; j++) {
+      p = pearls[j];
+      p.e.style.transform = 'rotateY(' + p.a + 'deg) translateZ(' + p.r + 'px) rotateY(' + (-(p.a + spin)) + 'deg) rotateX(' + tiltDeg + 'deg)';
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* ---------- ปรับขนาดตามหน้าจอ ---------- */
+  var stage = $('cakeStage');
+  function fit() {
+    var k = Math.max(.5, Math.min(1.3, window.innerWidth / 400, (window.innerHeight - 250) / 440));
+    stage.style.height = (440 * k) + 'px';
+    $('stageIn').style.setProperty('--k', k);
+  }
+  fit(); window.addEventListener('resize', fit);
+
+  /* ---------- ฉาก ---------- */
+  var scenes = ['sceneCake', 'sceneEnv', 'sceneLetter'];
+  function show(id) { scenes.forEach(function (s) { $(s).classList.toggle('active', s === id); }); }
+
+  /* ---------- เป่าเทียน ---------- */
+  var blown = false;
+  function blow() {
+    if (blown) return;
+    blown = true;
+    $('flame').classList.add('out');
+    $('glow').classList.add('off');
+    flameWrap.querySelector('.smoke').classList.add('go');
+    $('blowBtn').disabled = true;
+    $('hint').textContent = 'เทียนดับแล้ว! กดที่ตัวเค้กเพื่อเปิดซองจดหมายนะ';
+    confetti(14);
+  }
+  $('blowBtn').addEventListener('click', blow);
+
+  /* ---------- ลากหมุนเค้ก / แตะ ---------- */
+  var sx = 0, sy = 0, lx = 0, ly = 0, lt = 0;
+  stage.addEventListener('pointerdown', function (e) {
+    dragging = true; sx = lx = e.clientX; sy = ly = e.clientY; lt = performance.now();
+    try { stage.setPointerCapture(e.pointerId); } catch (err) {}
   });
+  stage.addEventListener('pointermove', function (e) {
+    if (!dragging) return;
+    var now = performance.now(), dt = Math.max(.008, (now - lt) / 1000);
+    var dx = e.clientX - lx, dy = e.clientY - ly;
+    spin += dx * .7;
+    tiltDeg = Math.max(8, Math.min(58, tiltDeg + dy * .3));
+    vel = Math.max(-500, Math.min(500, (dx * .7) / dt));
+    lx = e.clientX; ly = e.clientY; lt = now;
+  });
+  function release(e, tap) {
+    if (!dragging) return;
+    dragging = false;
+    if (tap && Math.hypot(e.clientX - sx, e.clientY - sy) < 8) {
+      if (!blown) blow(); else show('sceneEnv');
+    }
+  }
+  stage.addEventListener('pointerup', function (e) { release(e, true); });
+  stage.addEventListener('pointercancel', function (e) { release(e, false); });
+
+  /* ---------- เปิดซอง ---------- */
+  $('seal').addEventListener('click', function () {
+    $('envelope').classList.add('open');
+    setTimeout(function () { show('sceneLetter'); confetti(18); }, 1300);
+  });
+
+  /* ---------- ส่งต่อ / คัดลอกลิงก์ ---------- */
+  function toast() {
+    var t = $('toast'); t.classList.add('show');
+    setTimeout(function () { t.classList.remove('show'); }, 1800);
+  }
+  $('shareBtn').addEventListener('click', function () {
+    var url = location.href;
+    if (navigator.share) {
+      navigator.share({ title: document.title, url: url }).catch(function () {});
+      return;
+    }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = url; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      ta.remove(); toast();
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(toast, fallback);
+    } else fallback();
+  });
+  $('replayBtn').addEventListener('click', function () { location.reload(); });
+
+  /* ---------- หัวใจลอย ---------- */
+  function confetti(n) {
+    var set = ['💖', '🌸', '✨', '💗', '🎀'];
+    for (var i = 0; i < n; i++) {
+      var h = document.createElement('div');
+      h.className = 'heart';
+      h.textContent = set[Math.floor(Math.random() * set.length)];
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.animationDelay = Math.random() * 1.2 + 's';
+      document.body.appendChild(h);
+      (function (el) { setTimeout(function () { el.remove(); }, 6500); })(h);
+    }
+  }
+})();
 </script>
 </body>
 </html>
